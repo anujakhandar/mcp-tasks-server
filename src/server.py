@@ -22,3 +22,16 @@ def query(sql: str):
     rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
     conn.close()
     return rows
+
+def execute(sql: str, confirm: bool = False):
+    forbidden = ("SELECT",)
+    if sql.strip().upper().startswith(forbidden):
+        raise ValueError("Use query() for SELECT statements")
+    if not confirm:
+        raise ValueError("Destructive operation requires confirm=True")
+    conn = get_connection()
+    cursor = conn.execute(sql)
+    conn.commit()
+    affected = cursor.rowcount
+    conn.close()
+    return {"rows_affected": affected}
