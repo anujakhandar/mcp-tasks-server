@@ -3,7 +3,8 @@
 MCP server exposing a local SQLite `tasks` database as tools/resources for LLM agents.
 
 ## Status
-Scaffolding only — server logic not yet implemented.
+Core functions implemented (connection, list_tables, query, execute).
+Not yet wired up as MCP tools via the SDK — that's next.
 
 ## Planned interface
 - Resource: `list_tables`
