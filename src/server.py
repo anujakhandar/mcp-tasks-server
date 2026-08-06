@@ -1,24 +1,34 @@
-import sqlite3
 import os
+import psycopg
+from dotenv import load_dotenv
 
-DB_PATH = "data/tasks.db"
+load_dotenv()
 
 def get_connection():
-    if not os.path.exists(DB_PATH):
-        raise FileNotFoundError(f"Database not found at {DB_PATH}")
-    return sqlite3.connect(DB_PATH)
+    return psycopg.connect(
+        host=os.environ["PGHOST"],
+        port=os.environ["PGPORT"],
+        dbname=os.environ["PGDATABASE"],
+        user=os.environ["PGUSER"],
+        password=os.environ["PGPASSWORD"],
+    )
 
 def list_tables():
     conn = get_connection()
-    cursor = conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+    cursor = conn.execute(
+        "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'"
+    )
     tables = [row[0] for row in cursor.fetchall()]
     conn.close()
     return tables
 
 def get_schema(table: str):
     conn = get_connection()
-    cursor = conn.execute(f"PRAGMA table_info({table})")
-    columns = [{"name": row[1], "type": row[2]} for row in cursor.fetchall()]
+    cursor = conn.execute(
+        "SELECT column_name, data_type FROM information_schema.columns WHERE table_name = %s",
+        (table,),
+    )
+    columns = [{"name": row[0], "type": row[1]} for row in cursor.fetchall()]
     conn.close()
     return columns
 
@@ -29,7 +39,7 @@ def query(sql: str, params: tuple = ()):
         raise ValueError("Multiple statements are not allowed")
     conn = get_connection()
     cursor = conn.execute(sql, params)
-    columns = [desc[0] for desc in cursor.description]
+    columns = [desc.name for desc in cursor.description]
     rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
     conn.close()
     return rows
