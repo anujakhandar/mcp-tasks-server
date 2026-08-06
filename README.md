@@ -1,23 +1,29 @@
-# sqlite-mcp-server
+# postgres-mcp-server
 
-MCP server exposing a local SQLite `tasks` database as tools/resources for LLM agents.
+MCP server exposing a PostgreSQL `tasks` database as tools/resources for LLM agents.
 
 ## Status
-Core functions implemented (connection, list_tables, query, execute).
+Core functions implemented: `get_connection`, `list_tables`, `get_schema`, `query`, `execute`.
 Not yet wired up as MCP tools via the SDK — that's next.
 
-## Planned interface
-- Resource: `list_tables`
-- Tools:
-  - `get_schema(table)`
-  - `query(sql)` — read-only (SELECT)
-  - `execute(sql)` — INSERT/UPDATE/DELETE
+## Functions
+
+- `get_connection()` — connects to Postgres using credentials from `.env`
+- `list_tables()` — returns all table names in the `public` schema
+- `get_schema(table)` — returns column names and types for a given table
+- `query(sql, params=())` — read-only SELECT, parameterized, rejects multiple statements
+- `execute(sql, params=(), confirm=True)` — INSERT/UPDATE/DELETE, parameterized, requires confirmation, rejects multiple statements
 
 ## Setup
 ```bash
-python3 -m venv venv
-./venv/bin/pip install -r requirements.txt
+python -m venv venv
+venv\Scripts\activate       # Windows
+pip install -r requirements.txt
 ```
 
-## Data
-`data/tasks.db` — seeded SQLite db with a `tasks` table (id, title, priority, status, due_date, created_at).
+Create a `.env` file (see `.env` example in repo docs — not committed) with your Postgres connection details.
+
+## Next steps
+- Create the `tasks` table in your Postgres database
+- Wire functions up as MCP tools using the SDK's `@server.tool()` decorators
+- Test with the MCP inspector
