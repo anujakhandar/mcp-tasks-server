@@ -1,4 +1,4 @@
-# postgres-mcp-server
+# mcp-server
 
 MCP server exposing a PostgreSQL `tasks` database as tools/resources for LLM agents.
 
