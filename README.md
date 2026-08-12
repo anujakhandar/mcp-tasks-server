@@ -98,13 +98,6 @@ week-over-week completion rate.
 
 Python · PostgreSQL · MCP Python SDK (FastMCP) · Streamlit · Plotly
 
-## Status
-
-- [x] Core DB layer: `get_connection`, `list_tables`, `get_schema`, `query`, `execute`
-- [ ] Analytics tools (`tools.py`)
-- [ ] MCP tool/resource wiring via `@mcp.tool()`
-- [ ] Example agent client
-- [ ] Streamlit dashboard
 
 ## Future improvements
 
