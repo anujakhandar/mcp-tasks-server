@@ -98,7 +98,6 @@ week-over-week completion rate.
 
 Python · PostgreSQL · MCP Python SDK (FastMCP) · Streamlit · Plotly
 
-
 ## Future improvements
 
 - Table/column allowlisting for an added layer of access control
